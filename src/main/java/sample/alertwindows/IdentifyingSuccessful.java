@@ -13,7 +13,7 @@ public class IdentifyingSuccessful {
         successful.setTitle("Результат идентификации пользователя");
         successful.setHeaderText("Ваша личность подтверждена");
         successful.setContentText("Лица совпадают. \n" +
-                "Достоверность ходства составляет: " + data);
+                "Достоверность cходства составляет: " + data);
 
         successful.showAndWait();
     }
