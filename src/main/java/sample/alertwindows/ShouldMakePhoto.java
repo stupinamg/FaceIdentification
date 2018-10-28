@@ -11,7 +11,8 @@ public class ShouldMakePhoto {
         Alert inf = new Alert(Alert.AlertType.INFORMATION);
 
         inf.setTitle("Сделайте фото");
-        inf.setHeaderText("Вы не сделали фото.\n" + "Попробуйте снова");
+        inf.setHeaderText("Вы не сделали фото.");
+        inf.setContentText("Попробуйте еще раз");
         inf.showAndWait();
     }
 }

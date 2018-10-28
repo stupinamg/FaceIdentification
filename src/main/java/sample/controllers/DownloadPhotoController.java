@@ -54,8 +54,12 @@ public class DownloadPhotoController implements Initializable{
         if (file != null) {
             Image imageDownloaded = new Image(file.toURI().toString());
             imgDown.setImage(imageDownloaded);
+            imgDown.setPreserveRatio(true);
+            imgDown.setFitHeight(450);
+            imgDown.setFitWidth(450);
+
         } else {
-//            ChooseFile.showAlert();
+            ChooseFile.showAlert();
         }
         downloadedImage = imgDown.getImage();
         logger.info("Пользователь загрузит фото с диска");
@@ -67,12 +71,12 @@ public class DownloadPhotoController implements Initializable{
      * @param actionEvent событие нажатия по кнопке
      */
     public void goForward(ActionEvent actionEvent) {
-//        if (downloadedImage != null) {
+        if (downloadedImage != null) {
             makeFadeOut(actionEvent);
             logger.info("Переход к следующему окну после загрузки фото с диска");
-//        } else {
-//            ChooseFile.showAlert();
-//        }
+        } else {
+            ChooseFile.showAlert();
+        }
     }
 
     /**
@@ -112,9 +116,7 @@ public class DownloadPhotoController implements Initializable{
 
     private void loadNextScene() {
         try {
-            Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/second.fxml"));
-//            Stage currentStage = (Stage) borderPane.getScene().getWindow();
-//            currentStage.close();
+            Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/TakePhotoWindow.fxml"));
         } catch (IOException e) {
             logger.error("При чтении файла произошла ошибка " + e.getMessage());
             throw new RuntimeException(e);
