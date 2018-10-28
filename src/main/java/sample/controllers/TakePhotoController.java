@@ -5,19 +5,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sample.Main;
 import sample.alertwindows.FacesNotMatch;
 import sample.alertwindows.IdentifyingSuccessful;
 import sample.alertwindows.ShouldMakePhoto;
@@ -38,10 +39,15 @@ public class TakePhotoController implements Initializable {
 
     private static final Logger logger = LoggerFactory.getLogger(TakePhotoController.class);
 
+//    @FXML
+//    private VBox secondWinBox;
+
     @FXML
-    private VBox secondWinBox;
+    private BorderPane borderPane;
     @FXML
-    private ImageView imageView = new ImageView();
+    private ImageView imageView;
+    @FXML
+    private HBox buttons;
 
     /**
      * Переменная для сохранения фото, полученного из видео-потока веб-камеры
@@ -49,7 +55,7 @@ public class TakePhotoController implements Initializable {
     public static Image tookFromWebCamImage;
     private boolean cameraActive = false;
     private ScheduledExecutorService timer;
-    private Stage stage = new Stage();
+//    private Stage stage = new Stage();
     private VideoCapture camera = new VideoCapture(0);
     private DetectFaceService detectFaceService = new DetectFaceService();
     private VerifyFaceService verifyFaceService = new VerifyFaceService();
@@ -137,25 +143,30 @@ public class TakePhotoController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        secondWinBox.setOpacity(0);
+        borderPane.setOpacity(0);
         makeFadeInTransition();
         initController();
         logger.info("Произведена инициализация класса TakePhotoController");
     }
 
     private void initController() {
-        Group root = new Group(secondWinBox);
-        root.getChildren().add(imageView);
-        imageView.setFitHeight(360);
-        imageView.setFitWidth(610);
-        secondWinBox.setAlignment(Pos.CENTER);
-        camera.set(Videoio.CAP_PROP_FRAME_WIDTH, 600);
-        camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, 480);
-        Scene scene = new Scene(root, 600, 550);
-        stage.setMinHeight(550);
-        stage.setMinWidth(600);
+        Stage stage = new Stage();
+        Scene scene = new Scene(borderPane);
+
+
+
+//        Group root = new Group(borderPane);
+//        root.getChildren().addAll(imageView, buttons);
+//        imageView.setFitHeight(360);
+//        imageView.setFitWidth(610);
+//        secondWinBox.setAlignment(Pos.CENTER);
+//        camera.set(Videoio.CAP_PROP_FRAME_WIDTH, 1024);
+//        camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, 768);
+//        Scene scene = new Scene(root, 600, 550);
+//        stage.setMinHeight(550);
+//        stage.setMinWidth(600);
         stage.setScene(scene);
-        stage.setTitle("Идентификация пользователя");
+//        stage.setTitle("Идентификация пользователя");
         stage.show();
         logger.info("Метод донастройки инит работает");
         startWebcam();
@@ -196,7 +207,7 @@ public class TakePhotoController implements Initializable {
     private void makeFadeOut() {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(secondWinBox);
+        fadeTransition.setNode(borderPane);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
         fadeTransition.setOnFinished(event -> loadPreviousScene());
@@ -207,7 +218,7 @@ public class TakePhotoController implements Initializable {
         try {
             Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/DownloadPhotoWindow.fxml"));
             Scene newScene = new Scene(secondView);
-            Stage currentStage = (Stage) secondWinBox.getScene().getWindow();
+            Stage currentStage = (Stage) borderPane.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -217,7 +228,7 @@ public class TakePhotoController implements Initializable {
     private void makeFadeInTransition() {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1200));
-        fadeTransition.setNode(secondWinBox);
+        fadeTransition.setNode(borderPane);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
         fadeTransition.play();

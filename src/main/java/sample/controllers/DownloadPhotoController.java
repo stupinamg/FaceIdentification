@@ -9,7 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -23,19 +23,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DownloadPhotoController implements Initializable {
+public class DownloadPhotoController implements Initializable{
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadPhotoController.class);
 
     @FXML
-    private VBox firstWinBox;
+    private BorderPane borderPane;
     @FXML
     private ImageView imgDown;
+    private Image icon = new Image("data/ic.png");
 
     /**
      * Переменная для сохранения фото, загруженного с диска пользователем
      */
-    @FXML
     public static Image downloadedImage;
 
     /**
@@ -55,7 +55,7 @@ public class DownloadPhotoController implements Initializable {
             Image imageDownloaded = new Image(file.toURI().toString());
             imgDown.setImage(imageDownloaded);
         } else {
-            ChooseFile.showAlert();
+//            ChooseFile.showAlert();
         }
         downloadedImage = imgDown.getImage();
         logger.info("Пользователь загрузит фото с диска");
@@ -67,12 +67,12 @@ public class DownloadPhotoController implements Initializable {
      * @param actionEvent событие нажатия по кнопке
      */
     public void goForward(ActionEvent actionEvent) {
-        if (downloadedImage != null) {
+//        if (downloadedImage != null) {
             makeFadeOut(actionEvent);
             logger.info("Переход к следующему окну после загрузки фото с диска");
-        } else {
-            ChooseFile.showAlert();
-        }
+//        } else {
+//            ChooseFile.showAlert();
+//        }
     }
 
     /**
@@ -94,7 +94,8 @@ public class DownloadPhotoController implements Initializable {
      **/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        firstWinBox.setOpacity(0);
+        imgDown.setImage(icon);
+        borderPane.setOpacity(0);
         makeFadeInTransition();
         logger.info("Произошла инициализаця класса DownloadPhotoController");
     }
@@ -102,7 +103,7 @@ public class DownloadPhotoController implements Initializable {
     private void makeFadeOut(ActionEvent actionEvent) {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(firstWinBox);
+        fadeTransition.setNode(borderPane);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
         fadeTransition.setOnFinished(event -> loadNextScene());
@@ -111,8 +112,8 @@ public class DownloadPhotoController implements Initializable {
 
     private void loadNextScene() {
         try {
-            Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/TakePhotoWindow.fxml"));
-            Stage currentStage = (Stage) firstWinBox.getScene().getWindow();
+            Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/second.fxml"));
+            Stage currentStage = (Stage) borderPane.getScene().getWindow();
             currentStage.close();
         } catch (IOException e) {
             logger.error("При чтении файла произошла ошибка " + e.getMessage());
@@ -123,7 +124,7 @@ public class DownloadPhotoController implements Initializable {
     private void makeFadeInTransition() {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(firstWinBox);
+        fadeTransition.setNode(borderPane);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
         fadeTransition.play();
