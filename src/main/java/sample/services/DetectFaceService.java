@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.entity.DetectedResponseEntity;
+import sample.exceptions.FaceNotDetectedException;
 import sample.utils.Utils;
 import sample.utils.UtilsCommon;
 
@@ -43,6 +44,7 @@ public class DetectFaceService {
      * @throws Exception во время выполнения
      */
     public String detect(Image image) throws Exception {
+        String answer = null;
         HttpPost request = httpServiceForMSFaceApi.getHttpRequestForDetect(URI_BASE, FACE_ATTRIBUTES, CONTENT_TYPE, SUBSCRIPTION_KEY);
 
         HttpEntity entity1 = new ByteArrayEntity(convertImgToByteArray(image));
@@ -59,9 +61,15 @@ public class DetectFaceService {
             myObjects = mapper.readValue(jsonString,
                     mapper.getTypeFactory().constructCollectionType(List.class, DetectedResponseEntity.class));
             logger.info(jsonString);
-            logger.info(myObjects.get(0).getFaceId());
+
+            if(!myObjects.isEmpty()){
+                answer = myObjects.get(0).getFaceId();
+                logger.info(myObjects.get(0).getFaceId());
+            }else{
+                throw new FaceNotDetectedException();
+            }
         }
-        return myObjects.get(0).getFaceId();
+        return answer;
     }
 
     private byte[] convertImgToByteArray(Image image) throws IOException {

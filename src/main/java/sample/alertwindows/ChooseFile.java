@@ -9,11 +9,9 @@ public class ChooseFile {
      */
     public static void showAlert() {
         Alert inf = new Alert(Alert.AlertType.INFORMATION);
-
         inf.setTitle("Выберите файл");
-        inf.setHeaderText("Вы не загрузили фото.\n" + "Попробуйте снова");
-
-
+        inf.setHeaderText("Вы не загрузили фото");
+        inf.setContentText("Попробуйте еще раз");
         inf.showAndWait();
     }
 }

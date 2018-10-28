@@ -17,11 +17,13 @@ import org.opencv.videoio.Videoio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
+import sample.alertwindows.FaceNotDetected;
 import sample.alertwindows.FacesNotMatch;
 import sample.alertwindows.IdentifyingSuccessful;
 import sample.alertwindows.ShouldMakePhoto;
 import sample.entity.ValidateResponseEntity;
 import sample.entity.VerifyRequestEntity;
+import sample.exceptions.FaceNotDetectedException;
 import sample.services.DetectFaceService;
 import sample.services.VerifyFaceService;
 import sample.utils.Utils;
@@ -85,16 +87,26 @@ public class TakePhotoController implements Initializable {
      * @throws Exception
      */
     public void compareFaces(ActionEvent actionEvent) throws Exception {
+        String faceId2 = null;
+        String faceId1 = null;
         if (tookFromWebCamImage != null && DownloadPhotoController.downloadedImage != null) {
-            String faceId2 = detectFaceService.detect(TakePhotoController.tookFromWebCamImage);
-            String faceId1 = detectFaceService.detect(DownloadPhotoController.downloadedImage);
+           try {
+               faceId2 = detectFaceService.detect(TakePhotoController.tookFromWebCamImage);
+               faceId1 = detectFaceService.detect(DownloadPhotoController.downloadedImage);
 
             VerifyRequestEntity verifyRequestEntity = new VerifyRequestEntity();
-            verifyRequestEntity.setFaceIdDownload(faceId1);
-            verifyRequestEntity.setFaceIdSnapshot(faceId2);
-            showResultOfComparison(verifyRequestEntity);
+                verifyRequestEntity.setFaceIdDownload(faceId1);
+                verifyRequestEntity.setFaceIdSnapshot(faceId2);
+                showResultOfComparison(verifyRequestEntity);
 
-            logger.info("Нажата кнопка Инициализировать веб-контроллера");
+           }catch (FaceNotDetectedException e){
+               FaceNotDetected.showAlert();
+               makeFadeOut();
+               tookFromWebCamImage = null;
+               DownloadPhotoController.downloadedImage = null;
+               logger.error("Выскочила ошибка распознавания лица. Загружаем предыдущую страницу");
+           }
+               logger.info("Нажата кнопка Инициализировать веб-контроллера");
         } else {
             ShouldMakePhoto.showAlert();
         }
