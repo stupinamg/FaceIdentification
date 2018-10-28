@@ -150,21 +150,21 @@ public class TakePhotoController implements Initializable {
     }
 
     private void initController() {
-        Stage stage = new Stage();
-        Scene scene = new Scene(borderPane);
-
-
-
+//        Stage stage = new Stage();
+        Stage stage = (Stage) Main.window.getScene().getWindow();
+        Scene scene = new Scene(borderPane, 600, 600);
+        imageView.setPreserveRatio(true);
+//        borderPane.setCenter(imageView);
 //        Group root = new Group(borderPane);
 //        root.getChildren().addAll(imageView, buttons);
 //        imageView.setFitHeight(360);
 //        imageView.setFitWidth(610);
 //        secondWinBox.setAlignment(Pos.CENTER);
-//        camera.set(Videoio.CAP_PROP_FRAME_WIDTH, 1024);
-//        camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, 768);
+        camera.set(Videoio.CAP_PROP_FRAME_WIDTH, 1024);
+        camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, 768);
 //        Scene scene = new Scene(root, 600, 550);
-//        stage.setMinHeight(550);
-//        stage.setMinWidth(600);
+//        stage.setMinHeight(600);
+//        stage.setMinWidth(550);
         stage.setScene(scene);
 //        stage.setTitle("Идентификация пользователя");
         stage.show();
@@ -217,7 +217,7 @@ public class TakePhotoController implements Initializable {
     private void loadPreviousScene() {
         try {
             Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/DownloadPhotoWindow.fxml"));
-            Scene newScene = new Scene(secondView);
+            Scene newScene = new Scene(secondView, 600, 600);
             Stage currentStage = (Stage) borderPane.getScene().getWindow();
             currentStage.setScene(newScene);
         } catch (IOException e) {

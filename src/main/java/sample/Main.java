@@ -34,9 +34,9 @@ public class Main extends Application {
         window = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/DownloadPhotoWindow.fxml"));
         primaryStage.setTitle("Идентификация пользователя");
-        primaryStage.setMinHeight(550);
+        primaryStage.setMinHeight(600);
         primaryStage.setMinWidth(600);
-        primaryStage.setScene(new Scene(root, 600, 550));
+        primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.show();
         logger.info("Программа запустилась, открылось главное окно");
     }

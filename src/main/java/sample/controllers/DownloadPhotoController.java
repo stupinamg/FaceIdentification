@@ -113,8 +113,8 @@ public class DownloadPhotoController implements Initializable{
     private void loadNextScene() {
         try {
             Parent secondView = FXMLLoader.load(getClass().getResource("/fxml/second.fxml"));
-            Stage currentStage = (Stage) borderPane.getScene().getWindow();
-            currentStage.close();
+//            Stage currentStage = (Stage) borderPane.getScene().getWindow();
+//            currentStage.close();
         } catch (IOException e) {
             logger.error("При чтении файла произошла ошибка " + e.getMessage());
             throw new RuntimeException(e);
