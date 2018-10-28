@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.TakePhotoController">
    <top>
-      <Label prefHeight="18.0" prefWidth="251.0" text="Сделайте фото для идентификации" BorderPane.alignment="CENTER">
+      <Label prefHeight="18.0" prefWidth="344.0" text="Сделайте фото для идентификации" textAlignment="CENTER" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="30.0" />
          </BorderPane.margin>
@@ -25,7 +29,7 @@
          <children>
             <Button fx:id="btnTakePhoto" mnemonicParsing="false" onAction="#takePhoto" prefHeight="27.0" prefWidth="174.0" text="Сделать снимок">
                <HBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="50.0" />
+                  <Insets bottom="20.0" left="20.0" right="10.0" top="50.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="btnCompare" mnemonicParsing="false" onAction="#compareFaces" text="Идентифицировать">
@@ -35,7 +39,7 @@
             </Button>
             <Button fx:id="btnBack" cancelButton="true" mnemonicParsing="false" onAction="#goBack" prefHeight="27.0" prefWidth="75.0" text="Назад">
                <HBox.margin>
-                  <Insets bottom="20.0" left="80.0" top="50.0" />
+                  <Insets bottom="20.0" left="50.0" top="50.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="btnExit" mnemonicParsing="false" onAction="#exit" text="Выход">

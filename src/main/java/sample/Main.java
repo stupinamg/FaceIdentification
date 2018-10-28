@@ -36,7 +36,9 @@ public class Main extends Application {
         primaryStage.setTitle("Идентификация пользователя");
         primaryStage.setMinHeight(600);
         primaryStage.setMinWidth(600);
-        primaryStage.setScene(new Scene(root, 600, 600));
+        Scene scene = new Scene(root, 600, 600);
+        primaryStage.setScene(scene);
+        scene.getStylesheets().add("style.css");
         primaryStage.show();
         logger.info("Программа запустилась, открылось главное окно");
     }

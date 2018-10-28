@@ -163,6 +163,7 @@ public class TakePhotoController implements Initializable {
         camera.set(Videoio.CAP_PROP_FRAME_WIDTH, 1024);
         camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, 768);
         stage.setScene(scene);
+        scene.getStylesheets().add("style.css");
         stage.show();
         logger.info("Метод донастройки инит работает");
         startWebcam();
@@ -216,6 +217,7 @@ public class TakePhotoController implements Initializable {
             Scene newScene = new Scene(secondView, 600, 600);
             Stage currentStage = (Stage) borderPane.getScene().getWindow();
             currentStage.setScene(newScene);
+            newScene.getStylesheets().add("style.css");
         } catch (IOException e) {
             e.printStackTrace();
         }

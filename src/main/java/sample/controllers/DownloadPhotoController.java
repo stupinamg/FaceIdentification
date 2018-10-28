@@ -31,7 +31,7 @@ public class DownloadPhotoController implements Initializable{
     private BorderPane borderPane;
     @FXML
     private ImageView imgDown;
-    private Image icon = new Image("data/ic.png");
+    private Image icon = new Image("data/ic.jpg");
 
     /**
      * Переменная для сохранения фото, загруженного с диска пользователем
@@ -55,8 +55,8 @@ public class DownloadPhotoController implements Initializable{
             Image imageDownloaded = new Image(file.toURI().toString());
             imgDown.setImage(imageDownloaded);
             imgDown.setPreserveRatio(true);
-            imgDown.setFitHeight(450);
-            imgDown.setFitWidth(450);
+            imgDown.setFitHeight(420);
+            imgDown.setFitWidth(380);
 
         } else {
             ChooseFile.showAlert();
@@ -99,6 +99,8 @@ public class DownloadPhotoController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         imgDown.setImage(icon);
+        imgDown.setFitHeight(400);
+        imgDown.setFitWidth(350);
         borderPane.setOpacity(0);
         makeFadeInTransition();
         logger.info("Произошла инициализаця класса DownloadPhotoController");
