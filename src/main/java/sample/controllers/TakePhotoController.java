@@ -17,10 +17,7 @@ import org.opencv.videoio.Videoio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
-import sample.alertwindows.FaceNotDetected;
-import sample.alertwindows.FacesNotMatch;
-import sample.alertwindows.IdentifyingSuccessful;
-import sample.alertwindows.ShouldMakePhoto;
+import sample.alertwindows.*;
 import sample.entity.ValidateResponseEntity;
 import sample.entity.VerifyRequestEntity;
 import sample.exceptions.FaceNotDetectedException;
@@ -126,6 +123,10 @@ public class TakePhotoController implements Initializable {
             IdentifyingSuccessful.showAlertWithDefaultHeaderText(result.getConfidence());
         } else {
             FacesNotMatch.showAlert();
+            makeFadeOut();
+            tookFromWebCamImage = null;
+            DownloadPhotoController.downloadedImage = null;
+            logger.info("Личность не подтверждена. Загружаем предыдущую страницу");
         }
     }
 
@@ -186,7 +187,7 @@ public class TakePhotoController implements Initializable {
                 timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 
             } else {
-                System.err.println("Не удалось подключиться к камере");
+                CameraNotFound.showAlert();
             }
         } else {
             cameraActive = false;
