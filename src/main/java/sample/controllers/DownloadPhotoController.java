@@ -1,6 +1,7 @@
 package sample.controllers;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -72,7 +73,7 @@ public class DownloadPhotoController implements Initializable{
      */
     public void goForward(ActionEvent actionEvent) {
         if (downloadedImage != null) {
-            makeFadeOut(actionEvent);
+            makeFadeOut(actionEvent).play();;
             logger.info("Переход к следующему окну после загрузки фото с диска");
         } else {
             ChooseFile.showAlert();
@@ -106,14 +107,14 @@ public class DownloadPhotoController implements Initializable{
         logger.info("Произошла инициализаця класса DownloadPhotoController");
     }
 
-    private void makeFadeOut(ActionEvent actionEvent) {
+    private Transition makeFadeOut(ActionEvent actionEvent) {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1000));
         fadeTransition.setNode(borderPane);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
         fadeTransition.setOnFinished(event -> loadNextScene());
-        fadeTransition.play();
+        return fadeTransition;
     }
 
     private void loadNextScene() {
