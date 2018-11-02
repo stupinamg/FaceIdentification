@@ -40,7 +40,7 @@ public class DownloadPhotoController implements Initializable{
     public static Image downloadedImage;
 
     /** Отобразить информационное сообщение выбора файла */
-    private static void showFileChoosingInfo() {
+    private void showFileChoosingInfo() {
         AlertUtils.makeInfo("Выберите файл", "Вы не загрузили фото", "Попробуйте еще раз")
                 .showAndWait();
     }
