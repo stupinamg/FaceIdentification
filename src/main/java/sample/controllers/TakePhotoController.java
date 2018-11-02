@@ -51,6 +51,12 @@ public class TakePhotoController implements Initializable {
     private DetectFaceService detectFaceService = new DetectFaceService();
     private VerifyFaceService verifyFaceService = new VerifyFaceService();
 
+    /** Отобразить сообщение ошибки при подключении к камере */
+    private void showCameraNotFoundError() {
+        AlertUtils.makeError("Веб-камера не обнаружена","Не удалось подключиться к камере",
+                "Настройте подключение к веб-камере \nи повторите попытку")
+                .showAndWait();
+    }
 
     /**
      * Метод записывает захваченный кадр из видео-потока в переменную tookFromWebCamImage текущего класса.
@@ -188,7 +194,7 @@ public class TakePhotoController implements Initializable {
                 timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 
             } else {
-                CameraNotFound.showAlert();
+                showCameraNotFoundError();
             }
         } else {
             cameraActive = false;

@@ -20,6 +20,18 @@ public class AlertUtils {
     }
 
     /**
+     * Создать сообщение ошибки
+     * @param title заголовок
+     * @param header подзаголовок
+     * @param content содержимое
+     * @return сообщение ошибки
+     */
+    public static Alert makeError(String title, String header, String content) {
+        Alert err = new Alert(Alert.AlertType.ERROR);
+        return fillAlert(err, title, header, content);
+    }
+
+    /**
      * Заполнить сообщение
      * @param alert сообщение
      * @param title заголовок
