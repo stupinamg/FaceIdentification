@@ -73,7 +73,7 @@ public class DownloadPhotoController implements Initializable{
      */
     public void goForward(ActionEvent actionEvent) {
         if (downloadedImage != null) {
-            makeFadeOut(actionEvent).play();;
+            makeFadeOut(actionEvent).play();
             logger.info("Переход к следующему окну после загрузки фото с диска");
         } else {
             ChooseFile.showAlert();
@@ -103,16 +103,12 @@ public class DownloadPhotoController implements Initializable{
         imgDown.setFitHeight(400);
         imgDown.setFitWidth(350);
         borderPane.setOpacity(0);
-        makeFadeInTransition();
+        makeFadeInTransition().play();
         logger.info("Произошла инициализаця класса DownloadPhotoController");
     }
 
     private Transition makeFadeOut(ActionEvent actionEvent) {
-        FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
+        FadeTransition fadeTransition = makeFadeTransition(1, 0);
         fadeTransition.setOnFinished(event -> loadNextScene());
         return fadeTransition;
     }
@@ -126,13 +122,18 @@ public class DownloadPhotoController implements Initializable{
         }
     }
 
-    private void makeFadeInTransition() {
+    private Transition makeFadeInTransition() {
+        FadeTransition fadeTransition = makeFadeTransition(0, 1);
+        return fadeTransition;
+    }
+
+    private FadeTransition makeFadeTransition(double from, double to) {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1000));
         fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.play();
+        fadeTransition.setFromValue(from);
+        fadeTransition.setToValue(to);
+        return fadeTransition;
     }
 }
 
