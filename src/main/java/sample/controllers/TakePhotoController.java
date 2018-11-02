@@ -18,12 +18,12 @@ import org.opencv.videoio.Videoio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
-import sample.alertwindows.*;
 import sample.entity.ValidateResponseEntity;
 import sample.entity.VerifyRequestEntity;
 import sample.exceptions.FaceNotDetectedException;
 import sample.services.DetectFaceService;
 import sample.services.VerifyFaceService;
+import sample.utils.AlertUtils;
 import sample.utils.Utils;
 
 import java.io.IOException;

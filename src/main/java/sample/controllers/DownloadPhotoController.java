@@ -17,7 +17,7 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
-import sample.alertwindows.AlertUtils;
+import sample.utils.AlertUtils;
 
 import java.io.File;
 import java.io.IOException;
