@@ -52,6 +52,37 @@ public class TakePhotoController implements Initializable {
     private DetectFaceService detectFaceService = new DetectFaceService();
     private VerifyFaceService verifyFaceService = new VerifyFaceService();
 
+    /** Отобразить сообщение ошибки распознавания лица на фото */
+    private void showFaceNotDetectedError() {
+        AlertUtils.makeError("Лицо не распознано",
+                "Лицо на фото не распознано",
+                new StringBuilder("Повторите попытку. \n\n")
+                        .append("Возможно с диска Вы загрузили фото в низком \n")
+                        .append("качестве или фото, на котором отсутсвует \n")
+                        .append("изображение лица")
+                        .toString())
+                .showAndWait();
+    }
+
+    /** Отобразить сообщение необходимости сделать фото веб-камерой */
+    private void showShouldMakePhotoInfo() {
+        AlertUtils.makeInfo("Сделайте фото",
+                "Вы не сделали фото.",
+                "Попробуйте еще раз")
+                .showAndWait();
+    }
+
+    /**
+     * Отобразить сообщение совпадения фото, идентификация успешна
+     * @param data степерь сходства
+     */
+    private void showIdentifyingSuccessfulInfo(String data) {
+        AlertUtils.makeInfo("Результат идентификации пользователя",
+                "Ваша личность подтверждена",
+                "Лица совпадают. \nДостоверность cходства составляет: " + data)
+                .showAndWait();
+    }
+
     /** Отобразить сообщения ошибки идентификации пользователя */
     private void showFacesNotMatchError() {
         AlertUtils.makeError("Результат идентификации пользователя","Ваша личность не подтверждена",
@@ -112,7 +143,7 @@ public class TakePhotoController implements Initializable {
                 showResultOfComparison(verifyRequestEntity);
 
            }catch (FaceNotDetectedException e){
-               FaceNotDetected.showAlert();
+               showFaceNotDetectedError();
                makeFadeOut()
                        .play();
                tookFromWebCamImage = null;
@@ -121,7 +152,7 @@ public class TakePhotoController implements Initializable {
            }
                logger.info("Нажата кнопка Инициализировать веб-контроллера");
         } else {
-            ShouldMakePhoto.showAlert();
+            showShouldMakePhotoInfo();
         }
     }
 
@@ -136,7 +167,7 @@ public class TakePhotoController implements Initializable {
         logger.info("в takePhotoContrоller получен ответ от запроса " + result.isIdentical() + " " + result.getConfidence());
 
         if (result.isIdentical()) {
-            IdentifyingSuccessful.showAlertWithDefaultHeaderText(result.getConfidence());
+            showIdentifyingSuccessfulInfo(result.getConfidence());
         } else {
             showFacesNotMatchError();
             makeFadeOut()
