@@ -79,7 +79,8 @@ public class DownloadPhotoController implements Initializable{
      */
     public void goForward(ActionEvent actionEvent) {
         if (downloadedImage != null) {
-            makeFadeOut(actionEvent).play();
+            makeFadeOut(actionEvent)
+                    .play();
             logger.info("Переход к следующему окну после загрузки фото с диска");
         } else {
             showFileChoosingInfo();
@@ -109,7 +110,8 @@ public class DownloadPhotoController implements Initializable{
         imgDown.setFitHeight(400);
         imgDown.setFitWidth(350);
         borderPane.setOpacity(0);
-        makeFadeInTransition().play();
+        makeFadeInTransition()
+                .play();
         logger.info("Произошла инициализаця класса DownloadPhotoController");
     }
 

@@ -1,6 +1,7 @@
 package sample.controllers;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,7 +85,8 @@ public class TakePhotoController implements Initializable {
      * @param actionEvent событие нажатия по кнопке
      */
     public void goBack(ActionEvent actionEvent) {
-        makeFadeOut();
+        makeFadeOut()
+                .play();
         tookFromWebCamImage = null;
         DownloadPhotoController.downloadedImage = null;
         logger.info("Нажатие кнопки Назад окна веб-контроллера");
@@ -111,7 +113,8 @@ public class TakePhotoController implements Initializable {
 
            }catch (FaceNotDetectedException e){
                FaceNotDetected.showAlert();
-               makeFadeOut();
+               makeFadeOut()
+                       .play();
                tookFromWebCamImage = null;
                DownloadPhotoController.downloadedImage = null;
                logger.error("Выскочила ошибка распознавания лица. Загружаем предыдущую страницу");
@@ -136,7 +139,8 @@ public class TakePhotoController implements Initializable {
             IdentifyingSuccessful.showAlertWithDefaultHeaderText(result.getConfidence());
         } else {
             showFacesNotMatchError();
-            makeFadeOut();
+            makeFadeOut()
+                    .play();
             tookFromWebCamImage = null;
             DownloadPhotoController.downloadedImage = null;
             logger.info("Личность не подтверждена. Загружаем предыдущую страницу");
@@ -162,7 +166,8 @@ public class TakePhotoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         borderPane.setOpacity(0);
-        makeFadeInTransition();
+        makeFadeInTransition()
+                .play();
         initController();
         logger.info("Произведена инициализация класса TakePhotoController");
     }
@@ -214,14 +219,10 @@ public class TakePhotoController implements Initializable {
         Utils.onFXThread(view.imageProperty(), image);
     }
 
-    private void makeFadeOut() {
-        FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
+    private Transition makeFadeOut() {
+        FadeTransition fadeTransition = makeFadeTransition(Duration.millis(1000), 1, 0);
         fadeTransition.setOnFinished(event -> loadPreviousScene());
-        fadeTransition.play();
+        return fadeTransition;
     }
 
     private void loadPreviousScene() {
@@ -236,12 +237,16 @@ public class TakePhotoController implements Initializable {
         }
     }
 
-    private void makeFadeInTransition() {
+    private Transition makeFadeInTransition() {
+        return makeFadeTransition(Duration.millis(1200), 0, 1);
+    }
+
+    private FadeTransition makeFadeTransition(Duration duration, double from, double to) {
         FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1200));
+        fadeTransition.setDuration(duration);
         fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.play();
+        fadeTransition.setFromValue(from);
+        fadeTransition.setToValue(to);
+        return fadeTransition;
     }
 }
