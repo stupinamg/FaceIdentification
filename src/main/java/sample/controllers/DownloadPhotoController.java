@@ -17,7 +17,7 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
-import sample.alertwindows.ChooseFile;
+import sample.alertwindows.AlertUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +38,12 @@ public class DownloadPhotoController implements Initializable{
      * Переменная для сохранения фото, загруженного с диска пользователем
      */
     public static Image downloadedImage;
+
+    /** Отобразить информационное сообщение выбора файла */
+    private static void showFileChoosingInfo() {
+        AlertUtils.makeInfo("Выберите файл", "Вы не загрузили фото", "Попробуйте еще раз")
+                .showAndWait();
+    }
 
     /**
      * Метод загружает фото с диска в статическую переменную downloadedImage при нажтии кнопки.
@@ -60,7 +66,7 @@ public class DownloadPhotoController implements Initializable{
             imgDown.setFitWidth(380);
 
         } else {
-            ChooseFile.showAlert();
+            showFileChoosingInfo();
         }
         downloadedImage = imgDown.getImage();
         logger.info("Пользователь загрузит фото с диска");
@@ -76,7 +82,7 @@ public class DownloadPhotoController implements Initializable{
             makeFadeOut(actionEvent).play();
             logger.info("Переход к следующему окну после загрузки фото с диска");
         } else {
-            ChooseFile.showAlert();
+            showFileChoosingInfo();
         }
     }
 
