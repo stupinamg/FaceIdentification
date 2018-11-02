@@ -51,6 +51,13 @@ public class TakePhotoController implements Initializable {
     private DetectFaceService detectFaceService = new DetectFaceService();
     private VerifyFaceService verifyFaceService = new VerifyFaceService();
 
+    /** Отобразить сообщения ошибки идентификации пользователя */
+    private void showFacesNotMatchError() {
+        AlertUtils.makeError("Результат идентификации пользователя","Ваша личность не подтверждена",
+                "Попробуйте еще раз")
+                .showAndWait();
+    }
+
     /** Отобразить сообщение ошибки при подключении к камере */
     private void showCameraNotFoundError() {
         AlertUtils.makeError("Веб-камера не обнаружена","Не удалось подключиться к камере",
@@ -128,7 +135,7 @@ public class TakePhotoController implements Initializable {
         if (result.isIdentical()) {
             IdentifyingSuccessful.showAlertWithDefaultHeaderText(result.getConfidence());
         } else {
-            FacesNotMatch.showAlert();
+            showFacesNotMatchError();
             makeFadeOut();
             tookFromWebCamImage = null;
             DownloadPhotoController.downloadedImage = null;
