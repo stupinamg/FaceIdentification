@@ -1,6 +1,7 @@
 package sample.controllers;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,7 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
-import sample.alertwindows.ChooseFile;
+import sample.utils.AlertUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +38,12 @@ public class DownloadPhotoController implements Initializable{
      * Переменная для сохранения фото, загруженного с диска пользователем
      */
     public static Image downloadedImage;
+
+    /** Отобразить информационное сообщение выбора файла */
+    private void showFileChoosingInfo() {
+        AlertUtils.makeInfo("Выберите файл", "Вы не загрузили фото", "Попробуйте еще раз")
+                .showAndWait();
+    }
 
     /**
      * Метод загружает фото с диска в статическую переменную downloadedImage при нажтии кнопки.
@@ -59,7 +66,7 @@ public class DownloadPhotoController implements Initializable{
             imgDown.setFitWidth(380);
 
         } else {
-            ChooseFile.showAlert();
+            showFileChoosingInfo();
         }
         downloadedImage = imgDown.getImage();
         logger.info("Пользователь загрузит фото с диска");
@@ -72,10 +79,11 @@ public class DownloadPhotoController implements Initializable{
      */
     public void goForward(ActionEvent actionEvent) {
         if (downloadedImage != null) {
-            makeFadeOut(actionEvent);
+            makeFadeOut(actionEvent)
+                    .play();
             logger.info("Переход к следующему окну после загрузки фото с диска");
         } else {
-            ChooseFile.showAlert();
+            showFileChoosingInfo();
         }
     }
 
@@ -102,18 +110,15 @@ public class DownloadPhotoController implements Initializable{
         imgDown.setFitHeight(400);
         imgDown.setFitWidth(350);
         borderPane.setOpacity(0);
-        makeFadeInTransition();
+        makeFadeInTransition()
+                .play();
         logger.info("Произошла инициализаця класса DownloadPhotoController");
     }
 
-    private void makeFadeOut(ActionEvent actionEvent) {
-        FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
+    private Transition makeFadeOut(ActionEvent actionEvent) {
+        FadeTransition fadeTransition = makeFadeTransition(1, 0);
         fadeTransition.setOnFinished(event -> loadNextScene());
-        fadeTransition.play();
+        return fadeTransition;
     }
 
     private void loadNextScene() {
@@ -125,13 +130,18 @@ public class DownloadPhotoController implements Initializable{
         }
     }
 
-    private void makeFadeInTransition() {
+    private Transition makeFadeInTransition() {
+        FadeTransition fadeTransition = makeFadeTransition(0, 1);
+        return fadeTransition;
+    }
+
+    private FadeTransition makeFadeTransition(double from, double to) {
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setDuration(Duration.millis(1000));
         fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.play();
+        fadeTransition.setFromValue(from);
+        fadeTransition.setToValue(to);
+        return fadeTransition;
     }
 }
 

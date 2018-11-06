@@ -1,6 +1,7 @@
 package sample.controllers;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,12 +18,12 @@ import org.opencv.videoio.Videoio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.Main;
-import sample.alertwindows.*;
 import sample.entity.ValidateResponseEntity;
 import sample.entity.VerifyRequestEntity;
 import sample.exceptions.FaceNotDetectedException;
 import sample.services.DetectFaceService;
 import sample.services.VerifyFaceService;
+import sample.utils.AlertUtils;
 import sample.utils.Utils;
 
 import java.io.IOException;
@@ -51,6 +52,50 @@ public class TakePhotoController implements Initializable {
     private DetectFaceService detectFaceService = new DetectFaceService();
     private VerifyFaceService verifyFaceService = new VerifyFaceService();
 
+    /** Отобразить сообщение ошибки распознавания лица на фото */
+    private void showFaceNotDetectedError() {
+        AlertUtils.makeError("Лицо не распознано",
+                "Лицо на фото не распознано",
+                new StringBuilder("Повторите попытку. \n\n")
+                        .append("Возможно с диска Вы загрузили фото в низком \n")
+                        .append("качестве или фото, на котором отсутсвует \n")
+                        .append("изображение лица")
+                        .toString())
+                .showAndWait();
+    }
+
+    /** Отобразить сообщение необходимости сделать фото веб-камерой */
+    private void showShouldMakePhotoInfo() {
+        AlertUtils.makeInfo("Сделайте фото",
+                "Вы не сделали фото.",
+                "Попробуйте еще раз")
+                .showAndWait();
+    }
+
+    /**
+     * Отобразить сообщение совпадения фото, идентификация успешна
+     * @param data степерь сходства
+     */
+    private void showIdentifyingSuccessfulInfo(String data) {
+        AlertUtils.makeInfo("Результат идентификации пользователя",
+                "Ваша личность подтверждена",
+                "Лица совпадают. \nДостоверность cходства составляет: " + data)
+                .showAndWait();
+    }
+
+    /** Отобразить сообщения ошибки идентификации пользователя */
+    private void showFacesNotMatchError() {
+        AlertUtils.makeError("Результат идентификации пользователя","Ваша личность не подтверждена",
+                "Попробуйте еще раз")
+                .showAndWait();
+    }
+
+    /** Отобразить сообщение ошибки при подключении к камере */
+    private void showCameraNotFoundError() {
+        AlertUtils.makeError("Веб-камера не обнаружена","Не удалось подключиться к камере",
+                "Настройте подключение к веб-камере \nи повторите попытку")
+                .showAndWait();
+    }
 
     /**
      * Метод записывает захваченный кадр из видео-потока в переменную tookFromWebCamImage текущего класса.
@@ -71,7 +116,8 @@ public class TakePhotoController implements Initializable {
      * @param actionEvent событие нажатия по кнопке
      */
     public void goBack(ActionEvent actionEvent) {
-        makeFadeOut();
+        makeFadeOut()
+                .play();
         tookFromWebCamImage = null;
         DownloadPhotoController.downloadedImage = null;
         logger.info("Нажатие кнопки Назад окна веб-контроллера");
@@ -97,15 +143,16 @@ public class TakePhotoController implements Initializable {
                 showResultOfComparison(verifyRequestEntity);
 
            }catch (FaceNotDetectedException e){
-               FaceNotDetected.showAlert();
-               makeFadeOut();
+               showFaceNotDetectedError();
+               makeFadeOut()
+                       .play();
                tookFromWebCamImage = null;
                DownloadPhotoController.downloadedImage = null;
                logger.error("Выскочила ошибка распознавания лица. Загружаем предыдущую страницу");
            }
                logger.info("Нажата кнопка Инициализировать веб-контроллера");
         } else {
-            ShouldMakePhoto.showAlert();
+            showShouldMakePhotoInfo();
         }
     }
 
@@ -120,10 +167,11 @@ public class TakePhotoController implements Initializable {
         logger.info("в takePhotoContrоller получен ответ от запроса " + result.isIdentical() + " " + result.getConfidence());
 
         if (result.isIdentical()) {
-            IdentifyingSuccessful.showAlertWithDefaultHeaderText(result.getConfidence());
+            showIdentifyingSuccessfulInfo(result.getConfidence());
         } else {
-            FacesNotMatch.showAlert();
-            makeFadeOut();
+            showFacesNotMatchError();
+            makeFadeOut()
+                    .play();
             tookFromWebCamImage = null;
             DownloadPhotoController.downloadedImage = null;
             logger.info("Личность не подтверждена. Загружаем предыдущую страницу");
@@ -149,7 +197,8 @@ public class TakePhotoController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         borderPane.setOpacity(0);
-        makeFadeInTransition();
+        makeFadeInTransition()
+                .play();
         initController();
         logger.info("Произведена инициализация класса TakePhotoController");
     }
@@ -188,7 +237,7 @@ public class TakePhotoController implements Initializable {
                 timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 
             } else {
-                CameraNotFound.showAlert();
+                showCameraNotFoundError();
             }
         } else {
             cameraActive = false;
@@ -201,14 +250,10 @@ public class TakePhotoController implements Initializable {
         Utils.onFXThread(view.imageProperty(), image);
     }
 
-    private void makeFadeOut() {
-        FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1000));
-        fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(1);
-        fadeTransition.setToValue(0);
+    private Transition makeFadeOut() {
+        FadeTransition fadeTransition = makeFadeTransition(Duration.millis(1000), 1, 0);
         fadeTransition.setOnFinished(event -> loadPreviousScene());
-        fadeTransition.play();
+        return fadeTransition;
     }
 
     private void loadPreviousScene() {
@@ -223,12 +268,16 @@ public class TakePhotoController implements Initializable {
         }
     }
 
-    private void makeFadeInTransition() {
+    private Transition makeFadeInTransition() {
+        return makeFadeTransition(Duration.millis(1200), 0, 1);
+    }
+
+    private FadeTransition makeFadeTransition(Duration duration, double from, double to) {
         FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1200));
+        fadeTransition.setDuration(duration);
         fadeTransition.setNode(borderPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.play();
+        fadeTransition.setFromValue(from);
+        fadeTransition.setToValue(to);
+        return fadeTransition;
     }
 }
